@@ -30,11 +30,10 @@ class _MapWidgetState extends State<MapWidget> {
           current.selectedPoint != null &&
           current.selectedPoint!.isValid,
       listener: (context, state) {
-        // Центрируем карту на выбранной точке
         final point = state.selectedPoint!;
         _mapController.move(
           LatLng(point.latitudeInDegrees, point.longitudeInDegrees),
-          15.0, // zoom level
+          15.0,
         );
       },
       child: BlocBuilder<MapBloc, MapState>(
@@ -42,20 +41,17 @@ class _MapWidgetState extends State<MapWidget> {
           return FlutterMap(
             mapController: _mapController,
             options: MapOptions(
-              initialCenter: const LatLng(55.7558, 37.6173), // Москва по умолчанию
+              initialCenter: const LatLng(55.7558, 37.6173),
               initialZoom: 13.0,
               minZoom: 3.0,
               maxZoom: 18.0,
             ),
             children: [
-              // Слой тайлов (карта)
               TileLayer(
                 urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                 userAgentPackageName: 'com.example.mapoftpoints',
               ),
-              // Слой полилиний (треки)
               ..._buildPolylines(state.segments),
-              // Слой маркеров (текущая точка)
               if (state.selectedPoint != null && state.selectedPoint!.isValid)
                 _buildSelectedMarker(state.selectedPoint!),
             ],

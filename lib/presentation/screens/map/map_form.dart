@@ -40,7 +40,6 @@ class MapForm extends StatelessWidget {
 
     return Column(
       children: [
-        // Карта
         Expanded(
           child: Center(
             child: state.points.isEmpty
@@ -48,9 +47,7 @@ class MapForm extends StatelessWidget {
                 : const MapWidget(),
           ),
         ),
-        // Панель информации о точке
         if (state.selectedPoint != null) _PointWidget(point: state.selectedPoint!),
-        // Слайдер
         if (state.points.isNotEmpty) _TimelineSlider(),
       ],
     );
