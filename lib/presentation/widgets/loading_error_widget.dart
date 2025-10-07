@@ -26,7 +26,7 @@ class LoadingErrorWidget extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                title.isNotEmpty ? title : 'Не удалось загрузить содержимое!',
+                title.isNotEmpty ? title : 'Unable to access this screen!',
                 style: theme.textTheme.headlineSmall,
               ),
             ),
