@@ -14,7 +14,7 @@ class AppRouter extends RootStackRouter {
   List<AutoRoute> get routes => [
         CustomRoute(
           page: MapRoute.page,
-          path: '/map',
+          path: '/',
         ),
       ];
 }
