@@ -38,12 +38,16 @@ class GpsPoint {
     }
   }
 
+  String get description {
+    return 'fix: $gpsFix\n lat: $latitudeInDegrees\n lon: $longitudeInDegrees\n alt: $altitude\n valid: $isValid';
+  }
+
   factory GpsPoint.fromJson(Map<String, dynamic> json) => _$GpsPointFromJson(json);
 
   Map<String, dynamic> toJson() => _$GpsPointToJson(this);
 
   @override
   String toString() {
-    return 'fix: $gpsFix, lat: $latitudeInDegrees, lon: $longitudeInDegrees, alt: $altitude, valid: $isValid)';
+    return 'fix: $gpsFix, lat: $latitudeInDegrees, lon: $longitudeInDegrees, alt: $altitude, valid: $isValid';
   }
 }

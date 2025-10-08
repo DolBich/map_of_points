@@ -1,7 +1,21 @@
 part of 'map_screen.dart';
 
-class MapForm extends StatelessWidget {
+class MapForm extends StatefulWidget {
   const MapForm({super.key});
+
+  @override
+  State<MapForm> createState() => _MapFormState();
+}
+
+class _MapFormState extends State<MapForm> {
+  OverlayEntry? _overlayEntry;
+  Timer? _autoHideTimer;
+
+  @override
+  void dispose() {
+    _removeErrorNotification();
+    super.dispose();
+  }
 
   PreferredSizeWidget _appBar(BuildContext context) {
     return AppBar(
@@ -19,15 +33,43 @@ class MapForm extends StatelessWidget {
   bool _listenWhen(MapState p, MapState c) => p.error != c.error;
 
   void _listener(BuildContext context, MapState state) {
-    if (state.error != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(state.error!.toText),
-          backgroundColor: Colors.red,
-          duration: const Duration(seconds: 5),
-        ),
-      );
+    final error = state.error;
+    if (error != null) {
+      _showErrorNotification(context, error.toText);
     }
+  }
+
+
+  void _showErrorNotification(BuildContext context, String message) {
+    _removeErrorNotification();
+
+    final overlay = Overlay.of(context);
+
+    _overlayEntry = OverlayEntry(
+      builder: (context) => ErrorNotification(
+        message: message,
+        onClose: _removeErrorNotification,
+      ),
+    );
+
+
+    final overlayEntry = _overlayEntry;
+    if(overlayEntry != null) {
+      overlay.insert(overlayEntry);
+    }
+
+    _autoHideTimer = Timer(const Duration(seconds: 5), _removeErrorNotification);
+  }
+
+  void _removeErrorNotification() {
+    _autoHideTimer?.cancel();
+    _autoHideTimer = null;
+
+    final overlayEntry = _overlayEntry;
+    if (overlayEntry != null && overlayEntry.mounted) {
+      overlayEntry.remove();
+    }
+    _overlayEntry = null;
   }
 
   bool _buildWhen(MapState p, MapState c) =>
@@ -47,7 +89,6 @@ class MapForm extends StatelessWidget {
                 : const MapWidget(),
           ),
         ),
-        if (state.selectedPoint != null) _PointWidget(point: state.selectedPoint!),
         if (state.points.isNotEmpty) _TimelineSlider(),
       ],
     );

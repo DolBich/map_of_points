@@ -1,3 +1,5 @@
+import 'package:map_of_points/data/extensions/enum_extension.dart';
+
 sealed class GPSFailure {
   final String? message;
 
@@ -11,7 +13,9 @@ sealed class GPSFailure {
 
   factory GPSFailure.fromJson(Map<String, dynamic> json) {
     final message = json['message'];
-    switch(json['type'] as _ErrorType) {
+    final type = _ErrorType.values.byNameOrNull(json['type']);
+    if(type == null) return GPSFailure.smthWentWrong();
+    switch(type) {
       case _ErrorType.data:
         return GPSFailure.dataError(message);
       case _ErrorType.smth:

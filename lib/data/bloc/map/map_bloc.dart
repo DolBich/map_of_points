@@ -6,6 +6,7 @@ import 'package:map_of_points/domain/entities/track_segment.dart';
 import 'package:map_of_points/domain/repositories/i_flight_log_repository.dart';
 
 part 'map_event.dart';
+
 part 'map_state.dart';
 
 class MapBloc extends Bloc<MapEvent, MapState> {
@@ -22,7 +23,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     final result = await _repository.parseLog(event.fileData);
 
     result.fold(
-          (points) {
+      (points) {
         final segments = TrackBuilder.buildSegments(points);
         final selectedPoint = points.isNotEmpty ? points.first : null;
 
@@ -33,7 +34,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
           isLoading: false,
         ));
       },
-          (failure) {
+      (failure) {
         emit(state.copyWith(
           isLoading: false,
           error: failure,
