@@ -22,44 +22,23 @@ class _MapWidgetState extends State<MapWidget> {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return BlocListener<MapBloc, MapState>(
-      listenWhen: (previous, current) =>
-      previous.selectedPoint != current.selectedPoint &&
-          current.selectedPoint != null &&
-          current.selectedPoint!.isValid,
-      listener: (context, state) {
-        final point = state.selectedPoint!;
-        _mapController.move(
-          LatLng(point.latitudeInDegrees, point.longitudeInDegrees),
-          15.0,
-        );
-      },
-      child: BlocBuilder<MapBloc, MapState>(
-        builder: (context, state) {
-          return FlutterMap(
-            mapController: _mapController,
-            options: MapOptions(
-              initialCenter: const LatLng(55.7558, 37.6173),
-              initialZoom: 13.0,
-              minZoom: 3.0,
-              maxZoom: 18.0,
-            ),
-            children: [
-              TileLayer(
-                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                userAgentPackageName: 'com.example.mapoftpoints',
-              ),
-              ..._buildPolylines(state.segments),
-              if (state.selectedPoint != null && state.selectedPoint!.isValid)
-                _buildSelectedMarker(state.selectedPoint!),
-            ],
-          );
-        },
-      ),
+  bool _listenWhen(MapState p, MapState c) {
+    final cPoint = c.selectedPoint;
+    if (cPoint == null) return false;
+    if (p.selectedPoint != cPoint && cPoint.isValid) return true;
+    return false;
+  }
+
+  void _listener(BuildContext context, MapState state) {
+    final point = state.selectedPoint;
+    if (point == null) return;
+    _mapController.move(
+      LatLng(point.latitudeInDegrees, point.longitudeInDegrees),
+      15.0,
     );
   }
+
+  bool _buildWhen(MapState p, MapState c) => p.segments != c.segments || p.selectedPoint != c.selectedPoint;
 
   List<PolylineLayer> _buildPolylines(List<TrackSegment> segments) {
     return segments.map((segment) {
@@ -69,9 +48,9 @@ class _MapWidgetState extends State<MapWidget> {
             points: segment.points
                 .where((point) => point.isValid)
                 .map((point) => LatLng(
-              point.latitudeInDegrees,
-              point.longitudeInDegrees,
-            ))
+                      point.latitudeInDegrees,
+                      point.longitudeInDegrees,
+                    ))
                 .toList(),
             strokeWidth: 4.0,
             color: segment.hasGapBefore ? Colors.orange : Colors.blue,
@@ -97,4 +76,30 @@ class _MapWidgetState extends State<MapWidget> {
       ],
     );
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<MapBloc, MapState>(
+      listenWhen: _listenWhen,
+      listener: _listener,
+      buildWhen: _buildWhen,
+      builder: (context, state) {
+        return FlutterMap(
+          mapController: _mapController,
+          options: MapOptions(
+            initialZoom: 10.0,
+          ),
+          children: [
+            TileLayer(
+              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+              userAgentPackageName: 'com.example.mapoftpoints',
+            ),
+            ..._buildPolylines(state.segments),
+            if (state.selectedPoint != null && state.selectedPoint!.isValid) _buildSelectedMarker(state.selectedPoint!),
+          ],
+        );
+      },
+    );
+  }
 }
+

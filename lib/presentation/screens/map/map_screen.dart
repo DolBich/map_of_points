@@ -7,7 +7,7 @@ import 'package:map_of_points/domain/entities/gps_point.dart';
 import 'package:map_of_points/presentation/screens/map/widgets/map_widget.dart';
 
 part 'map_form.dart';
-part 'widgets.dart';
+part 'widgets/widgets.dart';
 
 @RoutePage()
 class MapScreen extends StatelessWidget {
