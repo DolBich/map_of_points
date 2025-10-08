@@ -20,7 +20,7 @@ class LoadingErrorWidget extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              '😦',
+              '🐸',
               style: theme.textTheme.displayLarge,
             ),
             Padding(

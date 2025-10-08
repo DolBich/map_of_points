@@ -34,7 +34,7 @@ class MapState with EquatableMixin {
       segments: segments ?? this.segments,
       selectedPoint: selectedPoint ?? this.selectedPoint,
       isLoading: isLoading ?? this.isLoading,
-      error: error ?? this.error,
+      error: error,
     );
   }
 
