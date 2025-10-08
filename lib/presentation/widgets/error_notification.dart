@@ -12,7 +12,7 @@ class ErrorNotification extends StatelessWidget {
 
   static final BoxDecoration _decoration = BoxDecoration(
     color: Colors.red[50],
-    border: Border.all(color: Colors.red[200]!),
+    border: Border.all(color: Colors.red),
     boxShadow: [
       BoxShadow(
         color: Colors.black.withAlpha(50),
@@ -24,7 +24,7 @@ class ErrorNotification extends StatelessWidget {
 
   Widget get _closeButton {
     return IconButton(
-      icon: Icon(Icons.close, color: Colors.red[600], size: 20),
+      icon: Icon(Icons.close, color: Colors.red),
       onPressed: onClose,
       padding: EdgeInsets.zero,
       constraints: const BoxConstraints(
@@ -37,12 +37,12 @@ class ErrorNotification extends StatelessWidget {
   Widget get _title {
     return Row(
       children: [
-        Icon(Icons.error_outline, color: Colors.red[600], size: 20),
+        Icon(Icons.error_outline, color: Colors.red),
         const SizedBox(width: 8),
         Text(
           'Error',
           style: TextStyle(
-            color: Colors.red[800],
+            color: Colors.red,
             fontWeight: FontWeight.bold,
             fontSize: 16,
           ),
@@ -62,8 +62,7 @@ class ErrorNotification extends StatelessWidget {
           Text(
             message,
             style: TextStyle(
-              color: Colors.red[700],
-              fontSize: 14,
+              color: Colors.red,
             ),
           ),
         ],
@@ -73,21 +72,24 @@ class ErrorNotification extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Align(
-        alignment: Alignment.bottomRight,
-        child: Container(
-          margin: const EdgeInsets.all(16),
-          constraints: const BoxConstraints(maxWidth: 400),
-          decoration: _decoration,
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              spacing: 12,
-              children: [
-                _body,
-                _closeButton,
-              ],
+    return Material(
+      type: MaterialType.transparency,
+      child: SafeArea(
+        child: Align(
+          alignment: Alignment.bottomRight,
+          child: Container(
+            margin: const EdgeInsets.all(16),
+            constraints: const BoxConstraints(maxWidth: 400),
+            decoration: _decoration,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                spacing: 12,
+                children: [
+                  _body,
+                  _closeButton,
+                ],
+              ),
             ),
           ),
         ),

@@ -59,26 +59,63 @@ class _MapWidgetState extends State<MapWidget> {
   }
 
   static const double _markerSize = 40;
+  static const double _disabledMarkerSize = 20;
 
-  MarkerLayer _buildSelectedMarker(GpsPoint point) {
+  MarkerLayer _buildSelectedMarker(GpsPoint point, bool selected) {
+    final icon = Icon(
+      Icons.location_pin,
+      color: selected ? Colors.red : Colors.grey,
+      size: selected ? _markerSize : _disabledMarkerSize,
+    );
+
     return MarkerLayer(
       markers: [
         Marker(
-          height: _markerSize,
-          width: _markerSize,
+          height: selected ? _markerSize : _disabledMarkerSize,
+          width: selected ? _markerSize : _disabledMarkerSize,
           alignment: Alignment.topCenter,
           point: LatLng(point.latitudeInDegrees, point.longitudeInDegrees),
           child: Tooltip(
             message: point.description,
-            child: const Icon(
-              Icons.location_pin,
-              color: Colors.red,
-              size: _markerSize,
-            ),
+            child: selected
+                ? icon
+                : IconButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: () {
+                      final bloc = context.read<MapBloc>();
+                      bloc.add(MapEvent.pointSelected(point.index));
+                    },
+                    icon: Align(alignment: Alignment.topCenter, child: icon),
+                  ),
           ),
         ),
       ],
     );
+  }
+
+  // GestureDetector(
+  // onTap: selected ? null : (){
+  // final bloc = context.read<MapBloc>();
+  // bloc.add(MapEvent.pointSelected(point.index));
+  // },
+  // child: icon,
+  // )),
+
+  List<MarkerLayer> _buildMarkers(List<GpsPoint> points, GpsPoint? selectedPoint) {
+    final List<MarkerLayer> res = [];
+
+    for (final point in points) {
+      if (point == selectedPoint || !point.isValid) {
+        continue;
+      }
+      res.add(_buildSelectedMarker(point, false));
+    }
+
+    if (selectedPoint != null && selectedPoint.isValid) {
+      res.add(_buildSelectedMarker(selectedPoint, true));
+    }
+
+    return res;
   }
 
   @override
@@ -89,10 +126,13 @@ class _MapWidgetState extends State<MapWidget> {
       buildWhen: _buildWhen,
       builder: (context, state) {
         final point = state.selectedPoint;
+        final points = state.points;
         return FlutterMap(
           mapController: _mapController,
           options: MapOptions(
-            initialZoom: 10.0,
+            initialCenter:
+                point != null ? LatLng(point.latitudeInDegrees, point.longitudeInDegrees) : LatLng(50.5, 30.51),
+            initialZoom: 15.0,
           ),
           children: [
             TileLayer(
@@ -100,7 +140,7 @@ class _MapWidgetState extends State<MapWidget> {
               userAgentPackageName: 'com.example.mapoftpoints',
             ),
             _buildPolyline(state.segments),
-            if (point != null && point.isValid) _buildSelectedMarker(point),
+            ..._buildMarkers(points, point),
             if (point != null)
               Align(
                 alignment: Alignment.topRight,

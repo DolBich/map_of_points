@@ -12,6 +12,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'Map of points',
+      debugShowCheckedModeBanner: false,
       builder: (context, child) {
         if (child == null) return const LoadingErrorWidget();
         return MediaQuery(

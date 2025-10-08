@@ -14,6 +14,7 @@ class _MapFormState extends State<MapForm> {
   @override
   void dispose() {
     _removeErrorNotification();
+    _autoHideTimer?.cancel();
     super.dispose();
   }
 
@@ -44,7 +45,6 @@ class _MapFormState extends State<MapForm> {
     _removeErrorNotification();
 
     final overlay = Overlay.of(context);
-
     _overlayEntry = OverlayEntry(
       builder: (context) => ErrorNotification(
         message: message,
@@ -52,10 +52,9 @@ class _MapFormState extends State<MapForm> {
       ),
     );
 
-
     final overlayEntry = _overlayEntry;
     if(overlayEntry != null) {
-      overlay.insert(overlayEntry);
+      overlay.insertAll([overlayEntry]);
     }
 
     _autoHideTimer = Timer(const Duration(seconds: 5), _removeErrorNotification);
@@ -66,7 +65,7 @@ class _MapFormState extends State<MapForm> {
     _autoHideTimer = null;
 
     final overlayEntry = _overlayEntry;
-    if (overlayEntry != null && overlayEntry.mounted) {
+    if (overlayEntry != null) {
       overlayEntry.remove();
     }
     _overlayEntry = null;

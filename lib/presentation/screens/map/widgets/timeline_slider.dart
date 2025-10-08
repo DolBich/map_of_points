@@ -9,7 +9,7 @@ class _TimelineSlider extends StatelessWidget {
       boxShadow: [
         BoxShadow(
           color: Colors.black.withAlpha(25),
-          blurRadius: 4,
+          blurRadius: 2,
           offset: const Offset(0, -2),
         ),
       ],
