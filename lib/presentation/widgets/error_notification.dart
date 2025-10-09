@@ -46,7 +46,7 @@ class _ErrorNotificationState extends State<ErrorNotification> with SingleTicker
     );
 
     _positionAnimation = Tween<Offset>(
-      begin: const Offset(0, 1),
+      begin: const Offset(1, 0),
       end: Offset.zero,
     ).animate(CurvedAnimation(
       parent: _controller,
