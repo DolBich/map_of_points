@@ -40,7 +40,6 @@ class _MapFormState extends State<MapForm> {
     }
   }
 
-
   void _showErrorNotification(BuildContext context, String message) {
     _removeErrorNotification();
 

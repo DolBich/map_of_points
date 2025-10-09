@@ -46,6 +46,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   void _onPointSelected(_PointSelected event, Emitter<MapState> emit) {
     if (event.index < state.points.length) {
       emit(state.copyWith(
+        error: GPSFailure.smthWentWrong(),
         selectedPoint: state.points[event.index],
       ));
     }
