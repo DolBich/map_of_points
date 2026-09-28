@@ -1,48 +1,93 @@
-# map_of_points
+# Map of Points
 
-    Приложение для расшифровки GPS данных и отображения траектории полёта на интерактивной карте
+A Flutter application for parsing GPS flight logs and visualizing flight trajectories on an interactive map.
 
-## Начало работы
+## Overview
 
-# Запуск приложения
-    - Запустите приложение через файл map_of_points.exe
-    - На интерфейсе появится пустой экран с надписью посередине, уведомляющей о необходимости загрузить данные
-    для дальнейшей работы
+Map of Points processes binary GPS logs produced by a tracking device and visualizes the recorded flight path on an interactive map.
 
-# Загрузка данных
-    - В правом верхнем углу находится кнопка для загрузки .bin файла с данными с GPS трекера
-    - Нажав на кнопку загрузки, появится диалоговое окно, через которое нужно выбрать файл с данными
-    - Вы увидите на середине экрана значок загрузки. Ожидайте окончания загрузки
-    - Если в файле содержатся ошибки, несовместимые с дальнейшей корректной работой приложения, то снизу справа
-    появится красное окно уведомления об ошибке. В нём будет описана причина ошибки и/или возможное решение
-    возникшей проблемы. Оно будет отображаться на экране на протяжении 5 секунд. Если данное уведомление вас отвлекает,
-    то его можно закрыть вручную через крестик на этом самом уведомлении
+The application validates incoming GPS records, displays information for individual points, and allows the user to navigate through the recorded track.
 
-# Основные функции
-    - По окончании загрузки, если не возникли критические ошибки, на экране отобразится карта мира с приближением к
-    первой точке из загруженных данных. Снизу будет расположен слайдер для переключения между точками с автоматическим
-    перемещением и приближением к выбранной точке. Справа вверху будет отображаться подробная информация о выбранной 
-    в данный момент времени точке.
-    - Если какие-то точки из загруженного файла оказались невалидными, то они не отображаются на карте, но информацию
-    о них всё еще можно просмотреть через правое верхнее окно, при выборе соответствующей точки через слайдер
-    - Траектория, образованная валидными точками, отрисовывает на карте оранжевую линию для примерной визуализации 
-    перемещения GPS трекера. В местах невалидных точек образуется разрыв оранжевой линии до следующей валидной точки
-    - С картой мира можно взаимодействовать напрямую - вращать, приближать и отдалять по мере необходимости.
+Invalid GPS records are excluded from the rendered trajectory while remaining available for inspection.
 
-# Информация о точке
-    - Информация о точке включает в себя фиксацию, широту, долготу, высоту, валидность
-    - Через правое верхнее окно можно просматривать информацию о выбранной в данный момент точке
-    - При наведении мышкой на любую из валидных точек можно узнать информацию о ней
+## Features
 
-# Выбор точки
-    - Выбор точки осуществляется через слайдер или по клику на невыбранную точку
+* Parse binary `.bin` GPS log files
+* Validate GPS records
+* Visualize flight trajectories on an interactive map
+* Navigate between recorded points
+* Display detailed information for the selected GPS point
+* Inspect invalid records separately
+* Automatically focus the map on the selected point
+* Interactive map navigation with zoom and pan
 
-## Возможные ошибки
+## GPS Data
 
-# Не загружается карта
-    - Проверьте подключение к Интернету
-    - Убедитесь, что у приложения есть разрешение на отправку данных по сети Интернет, что антивирус его не блокирует
+Each parsed record contains information including:
 
-# Файл не загружается
-    - Убедитесь, что расширение файла - .bin
-    - Проверьте, что вес файла кратен 11 байтам
+* Fix status
+* Latitude
+* Longitude
+* Altitude
+* Validity
+
+The application expects binary input files produced by the corresponding GPS tracker. The current parser expects files whose size is divisible by 11 bytes.
+
+## Architecture
+
+The application is structured around separate presentation and data-handling components, with routing implemented using `AutoRoute` and application state managed with `BLoC`.
+
+```text
+lib/
+├── presentation/
+├── ...
+└── main.dart
+```
+
+## Tech Stack
+
+* Flutter / Dart
+* BLoC
+* AutoRoute
+* Flutter Map
+* LatLong2
+* Dartz
+* File Picker
+* JSON Serializable
+* Build Runner
+
+## Supported Platforms
+
+The project contains Flutter targets for:
+
+* Android
+* iOS
+* Linux
+* macOS
+* Web
+* Windows
+
+## Example Workflow
+
+1. Open the application.
+2. Select a `.bin` GPS log file.
+3. The application parses and validates the recorded data.
+4. Valid points are rendered as a flight trajectory on the map.
+5. Select individual points to inspect their recorded data.
+6. Invalid records can still be inspected even though they are excluded from the trajectory.
+
+## Why I Built It
+
+The project was built to work with GPS flight data and to provide a practical visualization and inspection tool for recorded telemetry.
+
+It also serves as an example of working with binary input data, validation, state management, and interactive geospatial visualization in Flutter.
+
+## Status
+
+This is a completed personal project and is preserved as a technical showcase.
+
+---
+
+```
+Flutter • GPS • Telemetry • Binary Data • Geospatial Visualization • BLoC
+```
